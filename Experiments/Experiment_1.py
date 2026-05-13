@@ -1,0 +1,1 @@
+# Run community detection ignoring edge signs to obtain an initial partition. For each community, compute a balance score (fraction of internal triangles that are balanced). This # creates a "tension map" to quantify internal stability.
