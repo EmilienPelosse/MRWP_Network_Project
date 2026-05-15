@@ -1,7 +1,6 @@
 import pandas as pd
 import networkx as nx
 
-
 edges = []
 
 # Read the file and extract edges
@@ -103,3 +102,6 @@ U = symmetrize(G)
 print(f"Undirected graph: {U.number_of_nodes()} nodes, {U.number_of_edges()} edges")
 print(f"Positive edges: {sum(1 for _, _, d in U.edges(data=True) if d['sign'] == 1)}")
 print(f"Negative edges: {sum(1 for _, _, d in U.edges(data=True) if d['sign'] == -1)}")
+
+# Save the dataframe too in case you need it later
+df.to_csv('../Experiments/edges.csv', index=False)
