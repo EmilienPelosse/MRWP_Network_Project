@@ -6,7 +6,7 @@ import matplotlib.patches as mpatches
 # Load a sample of the graph
 G = nx.DiGraph()
 
-with gzip.open('soc-sign-epinions.gz', 'rt') as f:
+with gzip.open('wikiElec.ElecBs3.gz', 'rt') as f:
     for line in f:
         if line.startswith('#'):
             continue
