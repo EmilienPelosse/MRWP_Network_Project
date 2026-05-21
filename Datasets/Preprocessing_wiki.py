@@ -104,4 +104,4 @@ print(f"Positive edges: {sum(1 for _, _, d in U.edges(data=True) if d['sign'] ==
 print(f"Negative edges: {sum(1 for _, _, d in U.edges(data=True) if d['sign'] == -1)}")
 
 # Save the dataframe too in case you need it later
-df.to_csv('../Experiments/edges.csv', index=False)
+df.to_csv('../Experiments/wiki_edges.csv', index=False)
