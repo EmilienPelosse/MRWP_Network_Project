@@ -2,11 +2,8 @@
 
 ## Overview
 
-Experiments 1 and 2 established two things:
+Experiments 2 established :
 
-- **Experiment 1** showed that communities differ in their internal structural tension,
-  measured via a *balance score* — the fraction of triangles whose edge signs are consistent
-  with Structural Balance Theory
 - **Experiment 2** showed that introducing negative edges caused the network to reorganize
   from 93 into 150 communities, with 70.6% of nodes switching community
 
@@ -76,8 +73,7 @@ a reliable balance score), four communities were available for analysis:
 **Mean number of splits:** 40.2  
 
 All four balance scores sit well above the random baseline of 0.5, confirming that balance
-theory holds empirically in this dataset — consistent with the global result from
-Experiment 1.
+theory holds empirically in this dataset
 
 ---
 
@@ -116,8 +112,7 @@ as barriers. This is arguably the most theoretically interesting result of Exper
 ### Community 3 — Size: 2,024 · Balance: 0.816 · Fragmentation: 0.231
 
 The most internally stable community, with the highest balance score of 0.816. Consistent
-with the hypothesis, it also showed the lowest fragmentation among the three large
-communities — its core stayed largely intact when signs were introduced.
+with the hypothesis, it also showed a low fragmentation — its core stayed largely intact when signs were introduced.
 
 ---
 
