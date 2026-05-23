@@ -4,6 +4,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 from itertools import combinations
+import pickle 
 
 # ── Signed BA Model ────────────────────────────────────────────────────────
 
@@ -88,9 +89,11 @@ def visualise_signed_network(G, title="Signed Barabási–Albert Network",
 if __name__ == "__main__":
     # build network
     G = signed_ba_model(n=7000, m=3, p_positive=0.5, seed=42)
+    with open("signed_ba.pkl", "wb") as f:
+        pickle.dump(G, f)
     #G1 = signed_ba_model(n=7000, m = 3, p_positive=0.1, seed=42)
     #G2 = signed_ba_model(n=7000, m = 3, p_positive=0.9, seed=42)
     # visualise
-    visualise_signed_network(G)
+    #visualise_signed_network(G)
     #visualise_signed_network(G1, save_path="signed_ba1.png")
     #visualise_signed_network(G2, save_path="signed_ba2.png")
