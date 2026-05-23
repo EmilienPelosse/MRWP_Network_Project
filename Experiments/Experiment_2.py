@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 # ── Load graph ────────────────────────────────────────────────────────────────
-df = pd.read_csv('wiki_edges.csv')
+df = pd.read_csv('wiki_edges_symmetric.csv')
 U = nx.Graph()
 for _, row in df.iterrows():
-    U.add_edge(row['source'], row['target'], sign=row['sign'])
+    U.add_edge(row['node_A'], row['node_B'], sign=row['sign'])
 
 print(f"Graph loaded: {U.number_of_nodes()} nodes, {U.number_of_edges()} edges")
 
