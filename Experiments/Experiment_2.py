@@ -12,6 +12,7 @@ import pandas as pd
 from sklearn.metrics import normalized_mutual_info_score
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import json
 
 # ── Load graph ────────────────────────────────────────────────────────────────
 df = pd.read_csv('wiki_edges_symmetric.csv')
@@ -132,3 +133,6 @@ only_unsigned = set(partition_unsigned) - set(partition_signed)
 only_signed   = set(partition_signed)   - set(partition_unsigned)
 print(f"Nodes only in unsigned partition: {len(only_unsigned)}")
 print(f"Nodes only in signed partition:   {len(only_signed)}")
+
+with open('partition_unsigned.json', 'w') as f: json.dump(partition_unsigned, f)
+with open('partition_signed.json', 'w') as f: json.dump(partition_signed, f)
