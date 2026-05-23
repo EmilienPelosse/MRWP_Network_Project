@@ -77,22 +77,7 @@ def symmetrize(G):
 
         # Case 3: one-sided edge
         else:
-            common = set(G.successors(u)) & set(G.successors(v))
-            
-            if not common:
-                # No common neighbors → default to explicit sign
-                U.add_edge(u, v, sign=sign_uv)
-            else:
-                # Infer from common neighbors
-                scores = []
-                for c in common:
-                    sign_uc = G[u][c]['sign']
-                    sign_vc = G[v][c]['sign']
-                    # same relation to c → positive, opposite → negative
-                    scores.append(1 if sign_uc == sign_vc else -1)
-                
-                inferred = 1 if sum(scores) > 0 else -1
-                U.add_edge(u, v, sign=inferred)
+            U.add_edge(u, v, sign=sign_uv)
 
     return U
 
@@ -105,3 +90,16 @@ print(f"Negative edges: {sum(1 for _, _, d in U.edges(data=True) if d['sign'] ==
 
 # Save the dataframe too in case you need it later
 df.to_csv('../Experiments/wiki_edges.csv', index=False)
+
+# Convert the symmetric NetworkX graph back into a list of edges
+symmetric_edges = []
+for u, v, data in U.edges(data=True):
+    symmetric_edges.append({'node_A': u, 'node_B': v, 'sign': data['sign']})
+
+# Create a new symmetric DataFrame
+df_symmetric = pd.DataFrame(symmetric_edges)
+
+# Save the actual symmetric data (notice headers change to reflect no direction)
+df_symmetric.to_csv('../Experiments/wiki_edges_symmetric.csv', index=False)
+
+print("Saved true symmetric network to wiki_edges_symmetric.csv")
