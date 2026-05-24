@@ -125,7 +125,7 @@ plt.grid(True, linestyle='--', alpha=0.5)
 
 # Add trend line
 sns.regplot(data=df_frag, x='balance_score', y='fragmentation_index', 
-            scatter=False, color='black', linestyle='--')
+            scatter=False, color='black')
 
 plt.tight_layout()
 plt.savefig('experiment3_fragmentation_test.png', dpi=150)
