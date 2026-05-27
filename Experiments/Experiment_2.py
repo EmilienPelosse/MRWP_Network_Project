@@ -16,6 +16,7 @@ import json
 import sys
 import pickle
 
+
 # ── Load graph ────────────────────────────────────────────────────────────────
 def load_graph(path):
     if path.endswith(".pkl"):
@@ -34,6 +35,7 @@ def load_graph(path):
 
 path = sys.argv[1] if len(sys.argv) > 1 else "signed_ba3.pkl"
 U = load_graph(path)
+base = path.replace(".pkl", "").replace(".csv", "")
 
 print(f"Graph loaded: {U.number_of_nodes()} nodes, {U.number_of_edges()} edges")
 
@@ -149,5 +151,10 @@ only_signed   = set(partition_signed)   - set(partition_unsigned)
 print(f"Nodes only in unsigned partition: {len(only_unsigned)}")
 print(f"Nodes only in signed partition:   {len(only_signed)}")
 
+with open(f'partition_unsigned_{base}.json', 'w') as f: 
+    json.dump(partition_unsigned, f)
+with open(f'partition_signed_{base}.json', 'w') as f: 
+    json.dump(partition_signed, f)
+"""
 with open('partition_unsigned.json', 'w') as f: json.dump(partition_unsigned, f)
-with open('partition_signed.json', 'w') as f: json.dump(partition_signed, f)
+with open('partition_signed.json', 'w') as f: json.dump(partition_signed, f)"""

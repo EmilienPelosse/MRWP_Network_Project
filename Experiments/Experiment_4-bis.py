@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from itertools import combinations
 import pickle 
+import pandas as pd
 
 # ── Signed BA Model ────────────────────────────────────────────────────────
 
@@ -108,7 +109,16 @@ if __name__ == "__main__":
     #but if we want to move away from the wikiElec network to oserve BA model as a controlled synthetic test :
     G3 = signed_ba_model(n=1000, m=4, p_positive=0.5, seed=42)
     with open("signed_ba3.pkl", "wb") as f:
-        pickle.dump(G3, f)
+        pickle.dump(G, f)
+
+    # save csv from the fresh graph
+    edges = [(u, v, d['sign']) for u, v, d in G.edges(data=True)]
+    df = pd.DataFrame(edges, columns=['node_A', 'node_B', 'sign'])
+    df.to_csv("signed_ba3.csv", index=False)
+
+    print(f"PKL edges: {G.number_of_edges()}")
+    print(f"CSV rows:  {len(df)}")
+
     G4 = signed_ba_model(n=1000, m=4, p_positive=0.1, seed=42)
     with open("signed_ba4.pkl", "wb") as f:
         pickle.dump(G4, f)
