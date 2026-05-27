@@ -13,12 +13,29 @@ from sklearn.metrics import normalized_mutual_info_score
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import json
+import sys
+import pickle
+
 
 # ── Load graph ────────────────────────────────────────────────────────────────
-df = pd.read_csv('wiki_edges_symmetric.csv')
-U = nx.Graph()
-for _, row in df.iterrows():
-    U.add_edge(row['node_A'], row['node_B'], sign=row['sign'])
+def load_graph(path):
+    if path.endswith(".pkl"):
+        with open(path, "rb") as f:
+            G = pickle.load(f)
+    elif path.endswith(".csv"):
+        df = pd.read_csv(path)
+        G = nx.Graph()
+        for _, row in df.iterrows():
+            G.add_edge(row['node_A'], row['node_B'], sign=row['sign'])
+    else:
+        raise ValueError(f"Unsupported file format: {path}. Use .pkl or .csv")
+    
+    print(f"Graph loaded: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+    return G
+
+path = sys.argv[1] if len(sys.argv) > 1 else "signed_ba3.pkl"
+U = load_graph(path)
+base = path.replace(".pkl", "").replace(".csv", "")
 
 print(f"Graph loaded: {U.number_of_nodes()} nodes, {U.number_of_edges()} edges")
 
@@ -134,5 +151,10 @@ only_signed   = set(partition_signed)   - set(partition_unsigned)
 print(f"Nodes only in unsigned partition: {len(only_unsigned)}")
 print(f"Nodes only in signed partition:   {len(only_signed)}")
 
+with open(f'partition_unsigned_{base}.json', 'w') as f: 
+    json.dump(partition_unsigned, f)
+with open(f'partition_signed_{base}.json', 'w') as f: 
+    json.dump(partition_signed, f)
+"""
 with open('partition_unsigned.json', 'w') as f: json.dump(partition_unsigned, f)
-with open('partition_signed.json', 'w') as f: json.dump(partition_signed, f)
+with open('partition_signed.json', 'w') as f: json.dump(partition_signed, f)"""

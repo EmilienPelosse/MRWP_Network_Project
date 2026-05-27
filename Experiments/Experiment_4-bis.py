@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from itertools import combinations
 import pickle 
+import pandas as pd
 
 # ── Signed BA Model ────────────────────────────────────────────────────────
 
@@ -88,12 +89,40 @@ def visualise_signed_network(G, title="Signed Barabási–Albert Network",
 
 if __name__ == "__main__":
     # build network
-    G = signed_ba_model(n=7000, m=3, p_positive=0.5, seed=42)
+    # matching density of WikiElec network, which is quite big but mostly has a very high m
+    # in Wiki_data_info.py, we find that the WikiElec neetwork density is 0.00398, so about 0.004
+    # density = 2m/n -> m = density *n /2 = 0-004 * 1000/2 = 2
+    G = signed_ba_model(n=1000, m=2, p_positive=0.5, seed=42)
     with open("signed_ba.pkl", "wb") as f:
         pickle.dump(G, f)
-    #G1 = signed_ba_model(n=7000, m = 3, p_positive=0.1, seed=42)
-    #G2 = signed_ba_model(n=7000, m = 3, p_positive=0.9, seed=42)
+    G1 = signed_ba_model(n=1000, m=2, p_positive=0.1, seed=42)
+    with open("signed_ba1.pkl", "wb") as f:
+        pickle.dump(G1, f)
+    G2 = signed_ba_model(n=1000, m=2, p_positive=0.9, seed=42)
+    with open("signed_ba2.pkl", "wb") as f:
+        pickle.dump(G2, f)
     # visualise
-    #visualise_signed_network(G)
-    #visualise_signed_network(G1, save_path="signed_ba1.png")
-    #visualise_signed_network(G2, save_path="signed_ba2.png")
+    visualise_signed_network(G)
+    visualise_signed_network(G1, save_path="signed_ba1.png")
+    visualise_signed_network(G2, save_path="signed_ba2.png")
+
+    #but if we want to move away from the wikiElec network to oserve BA model as a controlled synthetic test :
+    G3 = signed_ba_model(n=1000, m=4, p_positive=0.5, seed=42)
+    with open("signed_ba3.pkl", "wb") as f:
+        pickle.dump(G, f)
+
+    # save csv from the fresh graph
+    edges = [(u, v, d['sign']) for u, v, d in G.edges(data=True)]
+    df = pd.DataFrame(edges, columns=['node_A', 'node_B', 'sign'])
+    df.to_csv("signed_ba3.csv", index=False)
+
+    print(f"PKL edges: {G.number_of_edges()}")
+    print(f"CSV rows:  {len(df)}")
+
+    G4 = signed_ba_model(n=1000, m=4, p_positive=0.1, seed=42)
+    with open("signed_ba4.pkl", "wb") as f:
+        pickle.dump(G4, f)
+    G5 = signed_ba_model(n=1000, m=4, p_positive=0.9, seed=42)
+    with open("signed_ba5.pkl", "wb") as f:
+        pickle.dump(G5, f)
+
