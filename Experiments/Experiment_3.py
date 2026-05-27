@@ -10,22 +10,41 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import Counter
 from scipy import stats
+import pickle
+import sys
 
 # ── 1. LOAD GRAPH AND EXPERIMENT 2 PARTITIONS ─────────────────────────────────
 print("Loading symmetric graph and historical partitions...")
-df = pd.read_csv('wiki_edges_symmetric.csv')
-U = nx.Graph()
-for _, row in df.iterrows():
-    U.add_edge(int(row['node_A']), int(row['node_B']), sign=int(row['sign']))
+
+def load_graph(path):
+    if path.endswith(".pkl"):
+        with open(path, "rb") as f:
+            G = pickle.load(f)
+    elif path.endswith(".csv"):
+        df = pd.read_csv(path)
+        G = nx.Graph()
+        for _, row in df.iterrows():
+            G.add_edge(row['node_A'], row['node_B'], sign=row['sign'])
+    else:
+        raise ValueError(f"Unsupported file format: {path}. Use .pkl or .csv")
+    
+    print(f"Graph loaded: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+    return G
+
+path = sys.argv[1] if len(sys.argv) > 1 else "signed_ba3.pkl"
+U = load_graph(path)
+base = path.replace(".pkl", "").replace(".csv", "")
 
 try:
-    with open('partition_unsigned.json', 'r') as f:
+    # in experiment 3, load as:
+    with open(f'partition_unsigned_{base}.json', 'r') as f:
         partition_unsigned = {int(k): v for k, v in json.load(f).items()}
-    with open('partition_signed.json', 'r') as f:
+    with open(f'partition_signed_{base}.json', 'r') as f:
         partition_signed = {int(k): v for k, v in json.load(f).items()}
 except FileNotFoundError:
     raise FileNotFoundError("Could not find partition files. Dump partition_unsigned.json "
                             "and partition_signed.json from Experiment 2 first.")
+
 
 # ── 2. HELPER: BALANCE SCORE (fast triangle scan, no enumerate_all_cliques) ───
 def compute_balance_score(subgraph):
@@ -55,8 +74,13 @@ unsigned_communities = {}
 for node, comm_id in partition_unsigned.items():
     unsigned_communities.setdefault(comm_id, []).append(node)
 
-MIN_SIZE = 50  # below this, triangle counts are too sparse for reliable balance scores
+avg_community_size = U.number_of_nodes() / len(unsigned_communities)
+MIN_SIZE = max(5, int(avg_community_size * 0.5)) # below this, triangle counts are too sparse for reliable balance scores
+print(f"Dynamic MIN_SIZE: {MIN_SIZE}") 
 fragmentation_data = []
+print(f"Total unsigned communities: {len(unsigned_communities)}")
+print(f"Communities above MIN_SIZE ({MIN_SIZE}): {sum(1 for nodes in unsigned_communities.values() if len(nodes) >= MIN_SIZE)}")
+print(f"Communities with triangles and splits: {len(fragmentation_data)}")
 
 for comm_id, nodes in unsigned_communities.items():
     if len(nodes) < MIN_SIZE:
